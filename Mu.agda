@@ -35,10 +35,3 @@ open import Data.Bool.Properties hiding (<-wellFounded)
 
 μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → @0 ∃[ n ] P n → ∃[ n ] P n
 μ P? ∃P = μ′ P? ∃P (<-wellFounded (∃P .proj₁))
-
-open import Choice
-
-module Classical {ℓ} (@0 ac : AxiomOfChoice ℓ) where
-
-  μ-irr : {P : ℕ → Set ℓ} → Decidable P → Recomputable (∃[ n ] P n)
-  μ-irr P? ∃P = μ P? (ac _ ∃P)
