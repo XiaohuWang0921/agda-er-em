@@ -2,7 +2,7 @@ module Mu where
 
 open import Data.Nat.Base
 open import Data.Product
-open import Relation.Unary hiding (Recomputable)
+open import Relation.Unary
 open import Relation.Nullary
 open import Data.Empty
 open import Function.Base
@@ -35,3 +35,4 @@ open import Data.Bool.Properties hiding (<-wellFounded)
 
 μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → @0 ∃[ n ] P n → ∃[ n ] P n
 μ P? ∃P = μ′ P? ∃P (<-wellFounded (∃P .proj₁))
+
