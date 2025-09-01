@@ -10,29 +10,32 @@ open import Induction.WellFounded
 open import Data.Nat.Induction
 open import Relation.Binary.PropositionalEquality
 open import Data.Nat.Properties
-open import Data.Bool.Base hiding (_<_)
-open import Data.Bool.Properties hiding (<-wellFounded)
+open import Data.Bool.Base hiding (_≤_; _<_)
+open import Data.Bool.Properties hiding (≤-refl; <-wellFounded)
 
-≢0⇒suc : ∀ {n} → n ≢ 0 → n ≡ suc (pred n)
+≢0⇒suc : ∀ {n} → n ≢ 0 → suc (pred n) ≡ n
 ≢0⇒suc {0} 0≢0 = ⊥-elim (0≢0 refl)
 ≢0⇒suc {suc _} _ = refl
 
-μ′ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → (@0 (n , Pn) : ∃[ n ] P n) → @0 Acc _<_ n → ∃[ n ] P n
-μ′ {_} {P} P? (n , Pn) (acc rs) with P? 0
+μ′ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → ∀ (@0 n) → @0 P n → @0 Acc _<_ n → ∃[ n ] P n
+μ′ {_} {P} P? n Pn (acc rs) with P? 0
 ... | yes P0 = 0 , P0
 ... | no ¬P0 =
-  let m , Psuc-m = ∃-P-suc
-  in suc m , Psuc-m
+  let m , Psm = μ′ (P? ∘ suc) (pred n) Pspn (rs pn<n)
+  in suc m , Psm
   where
     @0 n≢0 : n ≢ 0
     n≢0 refl = ¬P0 Pn
 
-    @0 n-suc : n ≡ suc (pred n)
-    n-suc = ≢0⇒suc n≢0
+    @0 spn : suc (pred n) ≡ n
+    spn = ≢0⇒suc n≢0
 
-    ∃-P-suc : ∃[ m ] P (suc m)
-    ∃-P-suc = μ′ (P? ∘ suc) (pred n , subst P n-suc Pn) (rs (subst (pred n <_) (sym n-suc) (n<1+n _)))
+    @0 Pspn : P (suc (pred n))
+    Pspn rewrite spn = Pn
+
+    @0 pn<n : pred n < n
+    pn<n rewrite spn = ≤-refl
 
 μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → @0 ∃[ n ] P n → ∃[ n ] P n
-μ P? ∃P = μ′ P? ∃P (<-wellFounded (∃P .proj₁))
+μ P? (n , Pn) = μ′ P? n Pn (<-wellFounded n)
 
