@@ -2,7 +2,7 @@ open import Relation.Nullary
 open import SemiDec
 open import Data.Product.Base
 
-module SemiDec.WithEM {ℓ} {P : Set ℓ} (@0 P? : Dec P)
+module SemiDec.WithEM {ℓ} {P : Set ℓ}
   ((M , iffM) : SemiDec P) ((N , iffN) : SemiDec (¬ P)) where
 
 open import Mu
@@ -16,9 +16,12 @@ open import Function.Bundles
 open PosetHomomorphism
 open Equivalence
 
-@0 ∃-∨ : ∃[ n ] (T (⟦ M ⟧ n) ⊎ T (⟦ N ⟧ n))
-∃-∨ with toSum P?
-... | inj₁ p = map₂ inj₁ (iffM .from p)
-... | inj₂ ¬p = map₂ inj₂ (iffN .from ¬p)
+Dec-∃-⊎ : Dec P → ∃[ n ] (T (⟦ M ⟧ n) ⊎ T (⟦ N ⟧ n))
+Dec-∃-⊎ (yes p) = map₂ inj₁ (iffM .from p)
+Dec-∃-⊎ (no ¬p) = map₂ inj₂ (iffN .from ¬p)
 
+ErDec⇒Dec : @0 Dec P → Dec P
+ErDec⇒Dec P? with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N ⟧ n)) (Dec-∃-⊎ P?)
+... | n , inj₁ T⟦M⟧n = yes (iffM .to (n , T⟦M⟧n))
+... | n , inj₂ T⟦N⟧n = no (iffN .to (n , T⟦N⟧n))
 
