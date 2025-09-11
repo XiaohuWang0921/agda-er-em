@@ -13,6 +13,8 @@ open import Relation.Nullary
 open import Level hiding (zero; suc)
 open import Function.Base
 open import Data.Empty
+open import Mu
+open import Relation.Nullary.Decidable hiding (map)
 
 open PosetHomomorphism
 
@@ -66,3 +68,8 @@ dec⇒semiDec (no ¬p) = ∞ , mk⇔ (λ ()) (flip contradiction ¬p)
 dec⇒semiDec¬ : Dec P → SemiDec (¬ P)
 dec⇒semiDec¬ (yes p) = ∞ , mk⇔ (λ ()) (contradiction p)
 dec⇒semiDec¬ (no ¬p) = orez , mk⇔ (const ¬p) (const orez-fin)
+
+reconstruct : SemiDec P → Reconstructible P
+reconstruct (N , iffN) p =
+  let open Equivalence iffN
+  in to (μ (T? ∘ ⟦ N ⟧) (from p))

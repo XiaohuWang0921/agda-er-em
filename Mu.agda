@@ -13,6 +13,9 @@ open import Data.Nat.Properties
 open import Data.Bool.Base hiding (_≤_; _<_)
 open import Data.Bool.Properties hiding (≤-refl; <-wellFounded)
 
+Reconstructible : ∀ {ℓ} → Set ℓ → Set _
+Reconstructible A = @0 A → A
+
 ≢0⇒suc : ∀ {n} → n ≢ 0 → suc (pred n) ≡ n
 ≢0⇒suc {0} 0≢0 = ⊥-elim (0≢0 refl)
 ≢0⇒suc {suc _} _ = refl
@@ -36,6 +39,6 @@ open import Data.Bool.Properties hiding (≤-refl; <-wellFounded)
     @0 pn<n : pred n < n
     pn<n rewrite spn = ≤-refl
 
-μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → @0 ∃[ n ] P n → ∃[ n ] P n
+μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → Reconstructible (∃[ n ] P n)
 μ P? (n , Pn) = μ′ P? n Pn (<-wellFounded n)
 

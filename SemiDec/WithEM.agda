@@ -20,8 +20,8 @@ dec⇒∃T⊎T : Dec P → ∃[ n ] (T (⟦ M ⟧ n) ⊎ T (⟦ N ⟧ n))
 dec⇒∃T⊎T (yes p) = map₂ inj₁ (iffM .from p)
 dec⇒∃T⊎T (no ¬p) = map₂ inj₂ (iffN .from ¬p)
 
-erDec⇒dec : @0 Dec P → Dec P
-erDec⇒dec P? with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N ⟧ n)) (dec⇒∃T⊎T P?)
+reconstruct-Dec : Reconstructible (Dec P)
+reconstruct-Dec P? with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N ⟧ n)) (dec⇒∃T⊎T P?)
 ... | n , inj₁ T⟦M⟧n = yes (iffM .to (n , T⟦M⟧n))
 ... | n , inj₂ T⟦N⟧n = no (iffN .to (n , T⟦N⟧n))
 
