@@ -17,6 +17,21 @@ pattern 1b = true
 FBS = List Bool
 IBS = ℕ → Bool
 
+-- Concatenations
+
+infixr 5 _∺_ _∙_ _⋆_
+
+_∺_ : Bool → IBS → IBS
+(b ∺ _) 0 = b
+(_ ∺ α) (suc n) = α n
+
+_∙_ : FBS → FBS → FBS
+_∙_ = _++_
+
+_⋆_ : FBS → IBS → IBS
+[] ⋆ α = α
+(b ∷ u) ⋆ α = b ∺ u ⋆ α
+
 -- Restrictions
 
 resFBS : FBS → ℕ → FBS
