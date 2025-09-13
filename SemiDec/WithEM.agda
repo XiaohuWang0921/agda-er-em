@@ -2,8 +2,7 @@ open import Relation.Nullary
 open import SemiDec
 open import Data.Product.Base
 
-module SemiDec.WithEM {ℓ} {P : Set ℓ}
-  ((M , iffM) : SemiDec P) ((N , iffN) : SemiDec (¬ P)) where
+module SemiDec.WithEM {ℓ} {P : Set ℓ} (@0 P? : Dec P) where
 
 open import Mu
 open import Relation.Nullary.Decidable
@@ -12,16 +11,20 @@ open import Relation.Binary.Morphism.Bundles
 open import Data.Sum.Base hiding (map; map₁; map₂)
 open import Data.Nat.Base
 open import Function.Bundles
+open import Function.Base
+open import Data.Empty
 
 open PosetHomomorphism
 open Equivalence
 
-dec⇒∃T⊎T : Dec P → ∃[ n ] (T (⟦ M ⟧ n) ⊎ T (⟦ N ⟧ n))
-dec⇒∃T⊎T (yes p) = map₂ inj₁ (iffM .from p)
-dec⇒∃T⊎T (no ¬p) = map₂ inj₂ (iffN .from ¬p)
+merge : SemiDec P → SemiDec (¬ P) → Dec P
+merge (M , iffM) (N , iffN) with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N ⟧ n)) (P? |> λ where
+  (yes p) → map₂ inj₁ (iffM .from p)
+  (no ¬p) → map₂ inj₂ (iffN .from ¬p))
+... | n , inj₁ TMn = yes (iffM .to (n , TMn))
+... | n , inj₂ TNn = no (iffN .to (n , TNn))
 
-reconstruct-Dec : Reconstructible (Dec P)
-reconstruct-Dec P? with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N ⟧ n)) (dec⇒∃T⊎T P?)
-... | n , inj₁ T⟦M⟧n = yes (iffM .to (n , T⟦M⟧n))
-... | n , inj₂ T⟦N⟧n = no (iffN .to (n , T⟦N⟧n))
-
+markov : SemiDec P → Stable P
+markov sdp ¬¬p = reconstruct sdp (P? |> λ where
+  (yes p) → p
+  (no ¬p) → ⊥-elim (¬¬p ¬p))
