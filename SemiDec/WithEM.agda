@@ -1,6 +1,4 @@
 open import Relation.Nullary
-open import SemiDec
-open import Data.Product.Base
 
 module SemiDec.WithEM {ℓ} {P : Set ℓ} (@0 P? : Dec P) where
 
@@ -13,6 +11,8 @@ open import Data.Nat.Base
 open import Function.Bundles
 open import Function.Base
 open import Data.Empty
+open import Data.Product.Base
+open import SemiDec
 
 open PosetHomomorphism
 open Equivalence
