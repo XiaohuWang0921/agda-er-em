@@ -23,9 +23,7 @@ Reconstructible A = @0 A → A
 μ′ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → ∀ (@0 n) → @0 P n → @0 Acc _<_ n → ∃[ n ] P n
 μ′ {_} {P} P? n Pn (acc rs) with P? 0
 ... | yes P0 = 0 , P0
-... | no ¬P0 =
-  let m , Psm = μ′ (P? ∘ suc) (pred n) Pspn (rs pn<n)
-  in suc m , Psm
+... | no ¬P0 = map suc id (μ′ (P? ∘ suc) (pred n) Pspn (rs pn<n))
   where
     @0 n≢0 : n ≢ 0
     n≢0 refl = ¬P0 Pn
