@@ -20,7 +20,7 @@ Reconstructible A = @0 A → A
 ≢0⇒suc {0} 0≢0 = ⊥-elim (0≢0 refl)
 ≢0⇒suc {suc _} _ = refl
 
-μ′ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → ∀ (@0 n) → @0 P n → @0 Acc _<_ n → ∃[ n ] P n
+μ′ : ∀ {ℓ} {P : Pred ℕ ℓ} → Decidable P → ∀ (@0 n) → @0 P n → @0 Acc _<_ n → ∃[ n ] P n
 μ′ {_} {P} P? n Pn (acc rs) with P? 0
 ... | yes P0 = 0 , P0
 ... | no ¬P0 = map suc id (μ′ (P? ∘ suc) (pred n) Pspn (rs pn<n))
@@ -37,6 +37,6 @@ Reconstructible A = @0 A → A
     @0 pn<n : pred n < n
     pn<n rewrite spn = ≤-refl
 
-μ : ∀ {ℓ} {P : ℕ → Set ℓ} → Decidable P → Reconstructible (∃[ n ] P n)
+μ : ∀ {ℓ} {P : Pred ℕ ℓ} → Decidable P → Reconstructible (∃[ n ] P n)
 μ P? (n , Pn) = μ′ P? n Pn (<-wellFounded n)
 

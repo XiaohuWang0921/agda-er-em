@@ -25,6 +25,4 @@ merge (M , iffM) (N , iffN) with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N
 ... | n , inj₂ TNn = no (iffN .to (n , TNn))
 
 markov : SemiDec P → Stable P
-markov sdp ¬¬p = reconstruct sdp (P? |> λ where
-  (yes p) → p
-  (no ¬p) → ⊥-elim (¬¬p ¬p))
+markov sdp ¬¬p = reconstruct sdp (decidable-stable P? ¬¬p)
