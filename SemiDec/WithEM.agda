@@ -24,5 +24,8 @@ merge (M , iffM) (N , iffN) with μ (λ n → T? (⟦ M ⟧ n) ⊎-dec T? (⟦ N
 ... | n , inj₁ TMn = yes (iffM .to (n , TMn))
 ... | n , inj₂ TNn = no (iffN .to (n , TNn))
 
+-- This formulation of Markov's Principle is found e.g. in
+-- ⟪Varieties of Constructive Mathematics⟫ by Bridges and Richman,
+-- Chapter 1, Section 1, Page 5.
 markov : SemiDec P → Stable P
 markov sdp ¬¬p = reconstruct sdp (decidable-stable P? ¬¬p)
